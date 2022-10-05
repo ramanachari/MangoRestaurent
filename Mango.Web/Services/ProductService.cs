@@ -10,55 +10,55 @@ namespace Mango.Web.Services
 
         }
 
-        public async Task<T> CreateProductAsync<T>(ProductDto productDto)
-        {
-            return await this.SendAsync<T>(new ApiRequest()
-            {
-                ApiType = StaticDetails.ApiType.POST,
-                Data = productDto,
-                Url = StaticDetails.ProductApiBase + "api/products",
-                AccessToken = ""
-            });
-        }
-
-        public async Task<T> DeleteProductAsync<T>(int id)
-        {
-            return await this.SendAsync<T>(new ApiRequest()
-            {
-                ApiType = StaticDetails.ApiType.DELETE,
-                Url = StaticDetails.ProductApiBase + "api/products/" + id,
-                AccessToken = ""
-            });
-        }
-
-        public async Task<T> GetAllProductsAsync<T>()
-        {
-            return await this.SendAsync<T>(new ApiRequest()
-            {
-                ApiType = StaticDetails.ApiType.GET,
-                Url = StaticDetails.ProductApiBase + "api/products",
-                AccessToken = ""
-            });
-        }
-
-        public  async Task<T> GetProductByIdAsync<T>(int id)
-        {
-            return await this.SendAsync<T>(new ApiRequest()
-            {
-                ApiType = StaticDetails.ApiType.GET,
-                Url = StaticDetails.ProductApiBase + "api/products/" + id,
-                AccessToken = ""
-            });
-        }
-
-        public async Task<T> UpdateProductAsync<T>(ProductDto productDto)
+        public async Task<T> CreateProductAsync<T>(ProductDto productDto, string token)
         {
             return await this.SendAsync<T>(new ApiRequest()
             {
                 ApiType = StaticDetails.ApiType.PUT,
                 Data = productDto,
                 Url = StaticDetails.ProductApiBase + "api/products",
-                AccessToken = ""
+                AccessToken = token
+            });
+        }
+
+        public async Task<T> DeleteProductAsync<T>(int id, string token)
+        {
+            return await this.SendAsync<T>(new ApiRequest()
+            {
+                ApiType = StaticDetails.ApiType.DELETE,
+                Url = StaticDetails.ProductApiBase + "api/products/" + id,
+                AccessToken = token
+            });
+        }
+
+        public async Task<T> GetAllProductsAsync<T>(string token)
+        {
+            return await this.SendAsync<T>(new ApiRequest()
+            {
+                ApiType = StaticDetails.ApiType.GET,
+                Url = StaticDetails.ProductApiBase + "api/products",
+                AccessToken = token
+            });
+        }
+
+        public  async Task<T> GetProductByIdAsync<T>(int id, string token)
+        {
+            return await this.SendAsync<T>(new ApiRequest()
+            {
+                ApiType = StaticDetails.ApiType.GET,
+                Url = StaticDetails.ProductApiBase + "api/products/" + id,
+                AccessToken = token
+            });
+        }
+
+        public async Task<T> UpdateProductAsync<T>(ProductDto productDto, string token)
+        {
+            return await this.SendAsync<T>(new ApiRequest()
+            {
+                ApiType = StaticDetails.ApiType.PUT,
+                Data = productDto,
+                Url = StaticDetails.ProductApiBase + "api/products",
+                AccessToken = token
             });
         }
     }

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using static System.Net.WebRequestMethods;
 
 #nullable disable
 
@@ -50,12 +51,12 @@ namespace Mango.Services.ProductAPI.Migrations
                     b.ToTable("Products");
 
                     b.HasData(
-                        new
-                        {
+                    new
+                    {
                             Id = 1,
                             CategoryName = "Appetizer",
                             Description = "The samosas are a fried or baked pastry with a savory filling, such as spiced potatoes, onions, peas, lentils, and minced meat (lamb, beef or chicken).<br/>Sweet samosas are also sold in the cities of Pakistan including Peshawar; these sweet samosas contain no filling and are dipped in thick sugar syrup.",
-                            ImageUrl = "https://medhasridotnetmastery.blob.core.windows.net/mango/14.jpg",
+                            ImageUrl = "https://medhadotnetmastery.blob.core.windows.net/mango/14.jpg",
                             Name = "Samosa",
                             Price = 15.0
                         },
@@ -64,7 +65,7 @@ namespace Mango.Services.ProductAPI.Migrations
                             Id = 2,
                             CategoryName = "Appetizer",
                             Description = "Paneer tikka is an Indian dish made from chunks of paneer marinated in spices and grilled in a tandoor.<br/>It is a vegetarian alternative to chicken tikka and other meat dishes. It is a popular dish that is widely available in India and countries with an Indian diaspora.",
-                            ImageUrl = "https://medhasridotnetmastery.blob.core.windows.net/mango/12.jpg",
+                            ImageUrl = "https://medhadotnetmastery.blob.core.windows.net/mango/12.jpg",
                             Name = "Paneer Tikka",
                             Price = 13.99
                         },
@@ -73,7 +74,7 @@ namespace Mango.Services.ProductAPI.Migrations
                             Id = 3,
                             CategoryName = "Dessert",
                             Description = "A pie is a baked dish which is usually made of a pastry dough casing that contains a filling of various sweet or savoury ingredients.<br/>A filled pie (also single-crust or bottom-crust), has pastry lining the baking dish, and the filling is placed on top of the pastry but left open.",
-                            ImageUrl = "https://medhasridotnetmastery.blob.core.windows.net/mango/11.jpg",
+                            ImageUrl = "https://medhadotnetmastery.blob.core.windows.net/mango/11.jpg",
                             Name = "Sweet Pie",
                             Price = 10.99
                         },
@@ -82,7 +83,7 @@ namespace Mango.Services.ProductAPI.Migrations
                             Id = 4,
                             CategoryName = "Entree",
                             Description = "Pav bhaji is a spiced mixture of mashed vegetables in a thick gravy served with bread.<br/>Vegetables in the curry may commonly include potatoes, onions, carrots, chillies, peas, bell peppers and tomatoes. Street sellers usually cook the curry on a flat griddle (tava) and serve the dish hot.",
-                            ImageUrl = "https://medhasridotnetmastery.blob.core.windows.net/mango/13.jpg",
+                            ImageUrl = "https://medhadotnetmastery.blob.core.windows.net/mango/13.jpg",
                             Name = "Pav Bhaji",
                             Price = 15.0
                         });
