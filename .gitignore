@@ -348,3 +348,4 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/Mango.Services.Identity/keys/is-signing-key-C22BB06807CCFC9154F9B69668719863.json
