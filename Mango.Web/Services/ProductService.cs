@@ -16,7 +16,7 @@ namespace Mango.Web.Services
             {
                 ApiType = StaticDetails.ApiType.PUT,
                 Data = productDto,
-                Url = StaticDetails.ProductApiBase + "api/products",
+                Url = StaticDetails.ProductApiBase + "/api/products",
                 AccessToken = token
             });
         }
@@ -26,7 +26,7 @@ namespace Mango.Web.Services
             return await this.SendAsync<T>(new ApiRequest()
             {
                 ApiType = StaticDetails.ApiType.DELETE,
-                Url = StaticDetails.ProductApiBase + "api/products/" + id,
+                Url = StaticDetails.ProductApiBase + "/api/products/" + id,
                 AccessToken = token
             });
         }
@@ -36,7 +36,7 @@ namespace Mango.Web.Services
             return await this.SendAsync<T>(new ApiRequest()
             {
                 ApiType = StaticDetails.ApiType.GET,
-                Url = StaticDetails.ProductApiBase + "api/products",
+                Url = StaticDetails.ProductApiBase + "/api/products",
                 AccessToken = token
             });
         }
@@ -46,7 +46,7 @@ namespace Mango.Web.Services
             return await this.SendAsync<T>(new ApiRequest()
             {
                 ApiType = StaticDetails.ApiType.GET,
-                Url = StaticDetails.ProductApiBase + "api/products/" + id,
+                Url = StaticDetails.ProductApiBase + "/api/products/" + id,
                 AccessToken = token
             });
         }
@@ -57,7 +57,7 @@ namespace Mango.Web.Services
             {
                 ApiType = StaticDetails.ApiType.PUT,
                 Data = productDto,
-                Url = StaticDetails.ProductApiBase + "api/products",
+                Url = StaticDetails.ProductApiBase + "/api/products",
                 AccessToken = token
             });
         }

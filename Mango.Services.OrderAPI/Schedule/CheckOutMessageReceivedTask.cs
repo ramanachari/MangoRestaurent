@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Azure.Messaging.ServiceBus;
+using Mango.MessageBus;
 using Mango.Services.OrderAPI.Messages;
 using Mango.Services.OrderAPI.Models;
 using Mango.Services.OrderAPI.Repository;
@@ -15,12 +16,14 @@ namespace Mango.Services.OrderAPI.Schedule
         private readonly IConfiguration _configuration;
         private readonly IOrderRepository _orderRepository;
         private IMapper _mapper;
+        private readonly IMessageBus _messageBus;
 
-        public CheckOutMessageReceivedTask(IConfiguration configuration, IOrderRepository orderRepository ,IMapper mapper)
+        public CheckOutMessageReceivedTask(IConfiguration configuration, IOrderRepository orderRepository ,IMapper mapper, IMessageBus messageBus)
         {
             _configuration = configuration;
             _orderRepository = orderRepository;
             _mapper = mapper;
+            _messageBus = messageBus;
         }
 
         public Task Execute(IJobExecutionContext context)
@@ -50,9 +53,29 @@ namespace Mango.Services.OrderAPI.Schedule
             OrderHeader orderHeader = _mapper.Map<OrderHeader>(checkoutHeaderDto);
             orderHeader.OrderDetails = _mapper.Map<List<OrderDetails>>(checkoutHeaderDto.CartDetails);
             orderHeader.CartTotalItems = orderHeader.OrderDetails.Sum(o => o.Count);
-
+            orderHeader.OrderTime = DateTime.Now;
             await _orderRepository.AddOrderAsync(orderHeader);
-            
+
+            PaymentRequestMessage paymentRequestMessage = new()
+            {
+                Name = orderHeader.FirstName + " " + orderHeader.LastName,
+                CardNumber = orderHeader.CardNumber,
+                CVV = orderHeader.CVV,
+                ExpiryMonthYear = orderHeader.ExpiryMonthYear,
+                OrderId = orderHeader.OrderHeaderId,
+                OrderTotal = orderHeader.OrderTotal
+            };
+
+            string orderPaymentProcessTopic = _configuration.GetValue<string>("OrderPaymentProcessTopic");
+            try
+            {
+                await _messageBus.PublishMessageAsync(paymentRequestMessage, orderPaymentProcessTopic, serviceBusConnectionString);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
         }
     }
 }

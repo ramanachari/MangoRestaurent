@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using Quartz.Impl;
 using Quartz.Spi;
 using Quartz;
+using Mango.MessageBus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,8 +34,13 @@ builder.Services.AddSingleton<CheckOutMessageReceivedTask>();
 builder.Services.AddSingleton(new JobSchedule(
     jobType: typeof(CheckOutMessageReceivedTask),
     cronExpression: "0 0/1 * 1/1 * ? *"));
+builder.Services.AddSingleton<OrderPaymentUpdateResultTask>();
+builder.Services.AddSingleton(new JobSchedule(
+    jobType: typeof(OrderPaymentUpdateResultTask),
+    cronExpression: "0 0/1 * 1/1 * ? *"));
 builder.Services.AddHostedService<QuartzHostedService>();
 
+builder.Services.AddSingleton<IMessageBus, AzureServiceMessageBus>();
 
 builder.Services.AddControllers();
 builder.Services.AddAuthentication("Bearer")

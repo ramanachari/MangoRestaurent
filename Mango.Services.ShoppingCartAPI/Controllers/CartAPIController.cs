@@ -12,12 +12,14 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
     {
         private readonly ICartRepository _cartRepository;
         private readonly IMessageBus _messageBus;
+        private readonly ICouponRepository _couponRepository;
         protected ResponseDto _response;
 
-        public CartAPIController(ICartRepository cartRepository, IMessageBus messageBus)
+        public CartAPIController(ICartRepository cartRepository, IMessageBus messageBus, ICouponRepository couponRepository)
         {
             _cartRepository = cartRepository;
             _messageBus = messageBus;
+            _couponRepository = couponRepository;
             _response = new ResponseDto();
         }
 
@@ -144,10 +146,25 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
                 {
                     return BadRequest();
                 }
+
+                if (!string.IsNullOrEmpty(checkoutHeader.CouponCode))
+                {
+                    CouponDto couponDto = await _couponRepository.GetCoupon(checkoutHeader.CouponCode);
+                    if (couponDto.DiscountAmount != checkoutHeader.DiscountAmount)
+                    {
+                        _response.IsSuccess = false;
+                        _response.ErrorMessages = new List<string>() { "Coupon Price has changed, please confirm" };
+                        _response.DisplayMessage = "Coupon Price has changed, please confirm";
+                        return _response;
+                    }
+                }
+
                 checkoutHeader.CartDetails = cartDto.CartDetails;
                 var checkoutMessageTopicName = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("AzureServiceBus")["checkOutTopicName"];
                 var serviceBusConnection = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("AzureServiceBus")["busConnectionString"];
                 await _messageBus.PublishMessageAsync(checkoutHeader, checkoutMessageTopicName, serviceBusConnection);
+
+                await _cartRepository.UpdateCartHeaderCompletion(cartDto.CartHeader.CartHeaderId);
                 
             }
             catch (Exception ex)

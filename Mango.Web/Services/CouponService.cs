@@ -9,13 +9,12 @@ namespace Mango.Web.Services
         {
 
         }
-        public async Task<T> GetCouponAsync<T>(string couponCode, string token = null)
+        public async Task<T> GetCouponAsync<T>(string code, string token = null)
         {
             return await this.SendAsync<T>(new ApiRequest()
             {
                 ApiType = StaticDetails.ApiType.GET,
-                Url = StaticDetails.CouponApiBase + "api/coupon/" + couponCode,
-                AccessToken = token
+                Url = StaticDetails.CouponApiBase + "/api/coupon/" + code
             });
         }
     }

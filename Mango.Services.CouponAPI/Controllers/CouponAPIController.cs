@@ -1,13 +1,11 @@
 ﻿using Mango.Services.CouponAPI.Models.Dto;
 using Mango.Services.CouponAPI.Repository;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Mango.Services.CouponAPI.Controllers
 {
     [ApiController]
     [Route("api/coupon")]
-    [Authorize]
     public class CouponAPIController : Controller
     {
 

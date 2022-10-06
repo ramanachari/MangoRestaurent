@@ -48,7 +48,7 @@ namespace Mango.Services.ShoppingCartAPI.Repository
             //check if header is null
 
             var cartHeaderFromDb = await _db.CartHeaders.AsNoTracking()
-                .FirstOrDefaultAsync(u => u.UserId == cart.CartHeader.UserId);
+                .FirstOrDefaultAsync(u => u.UserId == cart.CartHeader.UserId && !u.IsOrderCompleted);
 
             if (cartHeaderFromDb == null)
             {
@@ -81,6 +81,8 @@ namespace Mango.Services.ShoppingCartAPI.Repository
                     // if it has then update the count 
                     cart.CartDetails.FirstOrDefault().Count += cartDetailsFromDb.Count;
                     cart.CartDetails.FirstOrDefault().Product = null;
+                    cart.CartDetails.FirstOrDefault().CartDetailsId = cartDetailsFromDb.CartDetailsId;
+                    cart.CartDetails.FirstOrDefault().CartHeaderId = cartDetailsFromDb.CartHeaderId;
                     _db.CartDetails.Update(cart.CartDetails.FirstOrDefault());
                     await _db.SaveChangesAsync();
                 }
@@ -94,8 +96,12 @@ namespace Mango.Services.ShoppingCartAPI.Repository
         {
             Cart cart = new()
             {
-                CartHeader = await _db.CartHeaders.FirstOrDefaultAsync(c => c.UserId == userId),
+                CartHeader = await _db.CartHeaders.FirstOrDefaultAsync(c => c.UserId == userId && !c.IsOrderCompleted),
             };
+            
+            if (cart.CartHeader == null)
+                return new CartDto();
+
             cart.CartDetails = _db.CartDetails.Where(c => c.CartHeaderId == cart.CartHeader.CartHeaderId)
                 .Include(u => u.Product);
 
@@ -104,7 +110,7 @@ namespace Mango.Services.ShoppingCartAPI.Repository
 
         public async Task<bool> ApplyCoupon(string userId, string couponCode)
         {
-            var cartFromDb = await _db.CartHeaders.FirstOrDefaultAsync(u => u.UserId == userId);
+            var cartFromDb = await _db.CartHeaders.FirstOrDefaultAsync(u => u.UserId == userId && !u.IsOrderCompleted);
             cartFromDb.CouponCode = couponCode;
             _db.CartHeaders.Update(cartFromDb);
             await _db.SaveChangesAsync();
@@ -114,7 +120,7 @@ namespace Mango.Services.ShoppingCartAPI.Repository
 
         public async Task<bool> RemoveCoupon(string userId)
         {
-            var cartFromDb = await _db.CartHeaders.FirstOrDefaultAsync(u => u.UserId == userId);
+            var cartFromDb = await _db.CartHeaders.FirstOrDefaultAsync(u => u.UserId == userId && !u.IsOrderCompleted);
             cartFromDb.CouponCode = string.Empty;
             _db.CartHeaders.Update(cartFromDb);
             await _db.SaveChangesAsync();
@@ -148,6 +154,14 @@ namespace Mango.Services.ShoppingCartAPI.Repository
             {
                 return false;
             }
+        }
+
+        public async Task UpdateCartHeaderCompletion(int cartHeaderId)
+        {
+            CartHeader cartHeader = await _db.CartHeaders.FirstOrDefaultAsync(c => c.CartHeaderId == cartHeaderId);
+            cartHeader.IsOrderCompleted = true;
+            _db.CartHeaders.Update(cartHeader);
+            await _db.SaveChangesAsync();
         }
     }
 }
